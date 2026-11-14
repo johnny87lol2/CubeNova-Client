@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+*.user
+mod/build/
+mod/.gradle/
+mod/.tools/
+.tools/
+CubeNova/builtin/*.jar

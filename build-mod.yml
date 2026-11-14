@@ -1,0 +1,62 @@
+name: Build CubeNova Client mod
+on:
+  push:
+    paths: ['mod/**', 'mod-26.2/**', 'mod-1.21.4/**']
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.11.1
+      - name: Build
+        working-directory: mod
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cubenova-client-jar
+          path: mod/build/libs/cubenova-client-*.jar
+
+  build-26-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 9.5.1
+      - name: Build
+        working-directory: mod-26.2
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cubenova-client-26.2-jar
+          path: mod-26.2/build/libs/cubenova-client-*.jar
+
+  build-1-21-4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.11.1
+      - name: Build
+        working-directory: mod-1.21.4
+        run: gradle build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cubenova-client-1.21.4-jar
+          path: mod-1.21.4/build/libs/cubenova-client-*.jar
