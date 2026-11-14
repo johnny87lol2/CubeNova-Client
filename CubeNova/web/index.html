@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CubeNova</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="titlebar">
+  <div class="brand">Cube<b>Nova</b></div>
+  <div class="tbsp"></div>
+  <div class="chip-acc nodrag" id="accChip"></div>
+  <div class="wc nodrag">
+    <button id="wmin" title="Minimize"><svg viewBox="0 0 10 10"><path d="M1 5h8"/></svg></button>
+    <button id="wmax" title="Maximize"><svg class="m" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8"/></svg><svg class="r" viewBox="0 0 10 10"><rect x="1" y="3" width="6" height="6"/><path d="M3 3V1h6v6H7"/></svg></button>
+    <button id="wclose" title="Close"><svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1L1 9"/></svg></button>
+  </div>
+</header>
+<div id="app">
+  <aside id="side">
+    <button class="nav" data-p="play"></button>
+    <button class="nav" data-p="instances"></button>
+    <button class="nav" data-p="store"></button>
+    <button class="nav" data-p="client"></button>
+    <div class="grow"></div>
+    <button class="nav" data-p="accounts"></button>
+    <button class="nav" data-p="settings"></button>
+  </aside>
+  <section id="main">
+    <header id="top"><div id="title"></div></header>
+    <div id="page"></div>
+  </section>
+</div>
+<div class="rz" data-e="l"></div><div class="rz" data-e="r"></div><div class="rz" data-e="t"></div><div class="rz" data-e="b"></div>
+<div class="rz" data-e="tl"></div><div class="rz" data-e="tr"></div><div class="rz" data-e="bl"></div><div class="rz" data-e="br"></div>
+<div id="modal"><div class="dlg" id="dlg"></div></div>
+<div id="toasts"></div>
+<script src="app.js"></script>
+</body>
+</html>
