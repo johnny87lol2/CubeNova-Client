@@ -5,7 +5,7 @@ A Minecraft launcher for Windows with a built-in, Lunar-style HUD client for Fab
 
 The launcher is written in C# (.NET 8, WPF + WebView2) with an HTML/CSS/JS interface. The built-in client, **CubeNova Client**, is a small Fabric mod that the launcher installs into your instances automatically.
 
-> **Status: early development.** Windows only. The built-in client currently targets **Minecraft 1.21.1** only. Expect rough edges and please open issues or join my discord give me some advice https://discord.gg/sC4pcvq3zj.
+> **Status: early development.** Windows only. The built-in client currently targets **Minecraft 1.21.1 Minecraft 26.2** only. Expect rough edges and please open issues or join my discord give me some advice https://discord.gg/sC4pcvq3zj.
 
 ## Features
 
