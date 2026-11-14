@@ -47,6 +47,10 @@ const I18N = {
     noAccount: "No account", language: "Language", memory: "Default memory", jvm: "Extra JVM arguments", hideOnPlay: "Minimize launcher while playing",
     about: "CubeNova Launcher", saved: "Saved", confirmDel: "Delete this? This cannot be undone.",
     exited: "Game exited with code ", enable: "Enabled",
+    updates: "Updates", version: "Version", checkNow: "Check for updates", checking: "Checking...",
+    upToDate: "You are up to date.", updateAvail: "A new version is available.", updateFail: "Could not check for updates: ",
+    updateTitle: "Update available", updateText: "Your version: {0}  →  latest: {1}", download: "Update now", updating: "Updating...", restarting: "Restarting...", releasePage: "Release page", later: "Later",
+    autoCheck: "Check for updates on startup", unknownVer: "unknown",
     noClientVersions: "No CubeNova Client version found. Build the mod first (run mod\\build-mod.bat), then restart the launcher.",
   },
   zh: {
@@ -76,6 +80,10 @@ const I18N = {
     noAccount: "沒有帳號", language: "語言", memory: "預設記憶體", jvm: "額外 JVM 參數", hideOnPlay: "遊玩時最小化啟動器",
     about: "CubeNova Launcher", saved: "已儲存", confirmDel: "確定要刪除？此動作無法復原。",
     exited: "遊戲結束，代碼 ", enable: "啟用",
+    updates: "更新", version: "版本", checkNow: "檢查更新", checking: "檢查中...",
+    upToDate: "目前已是最新版本。", updateAvail: "有新版本可以更新。", updateFail: "無法檢查更新：",
+    updateTitle: "有新版本", updateText: "你的版本：{0}  →  最新版本：{1}", download: "立即更新", updating: "更新中...", restarting: "即將重新啟動...", releasePage: "Release 頁面", later: "稍後",
+    autoCheck: "啟動時自動檢查更新", unknownVer: "未知",
     noClientVersions: "找不到任何 CubeNova 客戶端版本。請先建置模組（執行 mod\\build-mod.bat），再重開啟動器。",
   },
 };
@@ -139,6 +147,10 @@ function onEvent(ev, d) {
     arr.push(d.line);
     if (arr.length > 800) arr.shift();
     appendLog(d.id, d.line);
+  } else if (ev === "updateProgress") {
+    const b = $("#upbar"), tx = $("#uptext");
+    if (b) b.style.width = Math.round(d.pct * 100) + "%";
+    if (tx) tx.textContent = d.text;
   } else if (ev === "winstate") {
     document.body.classList.toggle("max", !!d.maximized);
   } else if (ev === "exit") {
@@ -155,7 +167,7 @@ function render() {
   document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
   document.querySelectorAll(".nav").forEach(b => {
     const p = b.dataset.p;
-    b.innerHTML = ICONS[p] + "<span>" + esc(t(p)) + "</span>";
+    b.innerHTML = ICONS[p] + "<span>" + esc(t(p)) + "</span>" + (p === "settings" && S.update && S.update.available ? '<i class="dot"></i>' : "");
     b.classList.toggle("on", p === S.page);
   });
   $("#title").textContent = t(S.page);
@@ -493,6 +505,11 @@ PAGES.settings = el => {
       <input type="range" id="ram" min="1024" max="${maxRam}" step="256" value="${Math.min(s.ramMb, maxRam)}"></div>
     <div class="card col"><h2 style="margin:0">${esc(t("jvm"))}</h2><input class="input" id="jvm" value="${esc(s.jvmArgs)}" placeholder="-XX:+UseG1GC"></div>
     <div class="card"><label class="row"><span class="sw"><input type="checkbox" id="hide" ${s.hideLauncherOnPlay ? "checked" : ""}><span></span></span><span>${esc(t("hideOnPlay"))}</span></label></div>
+    <div class="card"><label class="row"><span class="sw"><input type="checkbox" id="autoupd" ${s.autoCheckUpdates !== false ? "checked" : ""}><span></span></span><span>${esc(t("autoCheck"))}</span></label></div>
+    <div class="card col"><h2 style="margin:0">${esc(t("updates"))}</h2>
+      <div class="muted">${esc(t("version"))}: <b>${esc(S.update && S.update.current ? S.update.current : (S.version || t("unknownVer")))}</b></div>
+      <div class="row"><button class="btn" id="updchk">${esc(t("checkNow"))}</button><span id="updmsg" class="muted">${updMsg()}</span></div>
+      ${S.update && S.update.available ? `<div><button class="btn pri" id="upddl">${esc(t("download"))}</button></div>` : ""}</div>
     <div class="dim">${esc(t("about"))}</div></div>`;
   el.querySelectorAll("[data-l]").forEach(b => b.onclick = () => safe(async () => {
     await call("saveSettings", { language: b.dataset.l });
@@ -501,6 +518,13 @@ PAGES.settings = el => {
   $("#ram").oninput = e => { $("#rv").textContent = e.target.value; };
   $("#ram").onchange = e => safe(async () => { s.ramMb = parseInt(e.target.value); await call("saveSettings", { ramMb: s.ramMb }); });
   $("#jvm").onchange = e => safe(async () => { s.jvmArgs = e.target.value; await call("saveSettings", { jvmArgs: s.jvmArgs }); });
+  $("#autoupd").onchange = e => safe(async () => { s.autoCheckUpdates = e.target.checked; await call("saveSettings", { autoCheckUpdates: e.target.checked }); });
+  $("#updchk").onclick = async () => {
+    $("#updmsg").textContent = t("checking");
+    await runUpdateCheck();
+    if (S.page === "settings") render();
+  };
+  const dl = $("#upddl"); if (dl) dl.onclick = startUpdate;
   $("#hide").onchange = e => safe(async () => { s.hideLauncherOnPlay = e.target.checked; await call("saveSettings", { hideLauncherOnPlay: e.target.checked }); });
 };
 
@@ -526,7 +550,45 @@ PAGES.settings = el => {
 })();
 
 /* ───────────── boot ───────────── */
+function updMsg() {
+  const u = S.update;
+  if (!u) return "";
+  if (u.error) return esc(t("updateFail") + u.error);
+  return esc(u.available ? t("updateAvail") : t("upToDate"));
+}
+
+async function runUpdateCheck() {
+  try { S.update = await call("checkUpdate"); } catch (e) { S.update = { error: e.message, available: false }; }
+  return S.update;
+}
+
+function showUpdateDialog() {
+  const u = S.update;
+  openModal(`<h3>${esc(t("updateTitle"))}</h3>
+    <p class="muted" style="margin-bottom:16px">${esc(t("updateText").replace("{0}", u.current || t("unknownVer")).replace("{1}", u.latest))}</p>
+    <div class="row"><button class="btn sm" id="up-page">${esc(t("releasePage"))}</button><div class="sp"></div><button class="btn" id="up-later">${esc(t("later"))}</button><button class="btn pri" id="up-dl">${esc(t("download"))}</button></div>`);
+  $("#up-later").onclick = closeModal;
+  $("#up-page").onclick = () => call("openUrl", { url: u.url });
+  $("#up-dl").onclick = startUpdate;
+}
+
+async function startUpdate() {
+  openModal(`<h3>${esc(t("updating"))}</h3><p class="muted" id="uptext" style="margin-bottom:14px">...</p><div class="bar"><i id="upbar"></i></div>`);
+  try {
+    await call("applyUpdate");
+    const tx = $("#uptext"); if (tx) tx.textContent = t("restarting");
+  } catch (e) {
+    closeModal();
+    toast(e.message, true);
+  }
+}
+
 (async function () {
   await safe(reloadState);
   render();
+  // 啟動時自動檢查一次更新 (可在設定關閉)
+  if (S.settings.autoCheckUpdates !== false) {
+    const u = await runUpdateCheck();
+    if (u.available) { render(); showUpdateDialog(); }
+  }
 })();

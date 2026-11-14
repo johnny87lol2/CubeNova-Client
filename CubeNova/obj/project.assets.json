@@ -174,11 +174,11 @@
   "project": {
     "version": "2.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2\\CubeNova\\CubeNova.csproj",
+      "projectUniqueName": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2 (1)\\CubeNova\\CubeNova.csproj",
       "projectName": "CubeNova",
-      "projectPath": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2\\CubeNova\\CubeNova.csproj",
+      "projectPath": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2 (1)\\CubeNova\\CubeNova.csproj",
       "packagesPath": "C:\\Users\\Jayyy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2\\CubeNova\\obj\\",
+      "outputPath": "C:\\Users\\Jayyy\\Downloads\\CubeNovaV2 (1)\\CubeNova\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jayyy\\AppData\\Roaming\\NuGet\\NuGet.Config",

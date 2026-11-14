@@ -89,7 +89,7 @@ public class Bridge
                 {
                     settings = new
                     {
-                        st.Language, st.RamMb, st.JvmArgs, st.HideLauncherOnPlay,
+                        st.Language, st.RamMb, st.JvmArgs, st.HideLauncherOnPlay, st.AutoCheckUpdates,
                         st.SelectedAccount, st.SelectedInstance,
                     },
                     accounts = st.Accounts.Select(AccountDto).ToList(),
@@ -100,11 +100,28 @@ public class Bridge
                     totalRamMb = TotalRamMb(),
                 };
 
+            case "checkUpdate":
+                return await Updater.Check();
+
+            case "applyUpdate":
+            {
+                if (_running.Count > 0 || _busy.Count > 0)
+                    throw new Exception(L.T("Close the game before updating.", "請先關閉遊戲再更新。"));
+                var info = await Updater.Check();
+                if (info.Error != "") throw new Exception(info.Error);
+                if (!info.Available) throw new Exception(L.T("You are already up to date.", "目前已是最新版本。"));
+                await Updater.Apply(info.Latest, (text, pct) => _emit("updateProgress", new { text, pct }), CancellationToken.None);
+                // 批次檔會等這個程式結束後再替換檔案
+                _ = Application.Current.Dispatcher.BeginInvoke((Action)(() => Application.Current.Shutdown()));
+                return true;
+            }
+
             case "saveSettings":
                 if (a["language"] != null) st.Language = S(a, "language") == "zh" ? "zh" : "en";
                 if (a["ramMb"] != null) st.RamMb = Math.Clamp(I(a, "ramMb"), 512, 65536);
                 if (a["jvmArgs"] != null) st.JvmArgs = S(a, "jvmArgs");
                 if (a["hideLauncherOnPlay"] != null) st.HideLauncherOnPlay = (bool)a["hideLauncherOnPlay"]!;
+                if (a["autoCheckUpdates"] != null) st.AutoCheckUpdates = (bool)a["autoCheckUpdates"]!;
                 Store.Save();
                 return true;
 

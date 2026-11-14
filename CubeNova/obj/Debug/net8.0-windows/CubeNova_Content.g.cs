@@ -8,9 +8,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("v.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("cubenova.ico")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("web/app.js")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("web/index.html")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("web/style.css")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("builtin/readme.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("webview2loader.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("webview2loader.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("webview2loader.dll")]
 
 

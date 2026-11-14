@@ -35,6 +35,7 @@ public class Settings
     public int RamMb { get; set; } = 3072;
     public string JvmArgs { get; set; } = "";
     public bool HideLauncherOnPlay { get; set; } = false;
+    public bool AutoCheckUpdates { get; set; } = true;
     public string SelectedAccount { get; set; } = "";
     public string SelectedInstance { get; set; } = "";
     public List<Account> Accounts { get; set; } = new();
