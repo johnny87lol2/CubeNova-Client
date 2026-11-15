@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "cubenova",
+  "version": "${version}",
+  "name": "CubeNova Client",
+  "description": "Built-in client mods for the CubeNova launcher: HUD, keystrokes, CPS, zoom, freelook and more.",
+  "authors": ["CubeNova"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["net.cubenova.client.CubeNovaClient"]
+  },
+  "mixins": ["cubenova.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
