@@ -33,7 +33,7 @@ Open the menu in game with **Right Shift**; HUD elements can be dragged anywhere
 | Toggle Sprint | Hold forward to sprint automatically |
 | Zoom | Hold **C** to zoom. Enabling it unbinds other actions that use the same key |
 | Freelook | Hold **Left Alt** to look around without turning your player |
-| Custom capes | See the custom capes of other CubeNova players |
+| Custom capes | Other players cannot see it |
 | Max Performance | On joining a world: VSync off and FPS limit set to unlimited |
 
 The mod also replaces the Minecraft logo on the title screen with a CubeNova Client logo.
