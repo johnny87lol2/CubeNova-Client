@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.cubenova.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "EntityMixin",
+    "CameraMixin",
+    "AbstractClientPlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

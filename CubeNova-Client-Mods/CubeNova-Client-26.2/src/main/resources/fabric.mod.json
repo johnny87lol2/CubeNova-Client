@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "cubenova_client",
+  "version": "2.0.0",
+  "name": "CubeNova Client",
+  "description": "Built-in HUD mods for the CubeNova launcher: FPS, CPS, keystrokes, coordinates and more.",
+  "authors": [
+    "CubeNova"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.cubenova.client.CubeNovaClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "mixins": [
+    "cubenova_client.mixins.json"
+  ]
+}
